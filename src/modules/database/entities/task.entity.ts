@@ -21,19 +21,17 @@ export class Task {
   @Column({ nullable: true })
   description?: string;
 
-  @Column({ type: 'boolean' })
+  @Column({ type: 'boolean', default: false })
   done: boolean;
 
   @Column({ type: 'datetime', nullable: true })
   deadline?: Date;
 
-  @Column({ type: 'int', name: 'supervisor_id', nullable: true })
-  supervisorId?: number;
-
   @Column({ type: 'int', name: 'user_id', nullable: false })
   userId: number;
 
   @ManyToOne(() => User, (user) => user?.tasks, { nullable: false })
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 
   @Column({ type: 'int', name: 'list_id', nullable: true })

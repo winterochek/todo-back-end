@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { UserController } from './users.controller';
-import { UserService } from './users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../database/entities';
+import { List, Task } from '../database/entities';
+import { ListService } from './list.service';
+import { ListController } from './list.controller';
+import { UserModule } from '../users/user.module';
+import { UserService } from '../users/users.service';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from '../auth/auth.guard';
 import { JwtModule } from '@nestjs/jwt';
@@ -10,7 +12,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Task, List]),
+    UserModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -23,14 +26,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
   ],
-  controllers: [UserController],
+  controllers: [ListController],
   providers: [
+    ListService,
     UserService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
   ],
-  exports: [UserService, TypeOrmModule],
 })
-export class UserModule {}
+export class ListModule {}

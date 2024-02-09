@@ -6,7 +6,6 @@ import {
   Param,
   Post,
   Put,
-  Query,
   Request,
 } from '@nestjs/common';
 import { AuthorizedRequest } from '../shared/types';
@@ -14,7 +13,6 @@ import { UserService } from './users.service';
 import {
   EmailAvailabilityBody,
   UpdateUserBody,
-  UserQuery,
   UsernameAvailabilityBody,
 } from './request';
 import { UserDto } from './dto';
@@ -25,16 +23,13 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Get('me')
-  me(
-    @Request() req: AuthorizedRequest,
-    @Query() query: UserQuery,
-  ): Promise<UserDto> {
-    return this.userService.getById(req.user.id, true, query?.relations);
+  me(@Request() req: AuthorizedRequest): Promise<UserDto> {
+    return this.userService.getById(req.user.id);
   }
 
   @Get(':id')
   getOne(@Param('id') id: number): Promise<UserDto> {
-    return this.userService.getById(id, false);
+    return this.userService.getById(id);
   }
 
   @Public()
@@ -53,12 +48,13 @@ export class UserController {
     return this.userService.checkUsernameAvailability(body);
   }
 
-  @Put('')
+  @Put(':id')
   update(
     @Request() req: AuthorizedRequest,
+    @Param('id') id: number,
     @Body() body: UpdateUserBody,
   ): Promise<void> {
-    return this.userService.update(req.user.id, body);
+    return this.userService.update(req.user.id, id, body);
   }
 
   @Delete(':id')
