@@ -19,7 +19,7 @@ import { AuthGuard } from './auth.guard';
         global: true,
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: '60s',
+          expiresIn: '3h',
         },
       }),
       inject: [ConfigService],

@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UserService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { SignInBody, SignUpBody } from './request';
+import { ResetPasswordBody, SignInBody, SignUpBody } from './request';
 
 @Injectable({})
 export class AuthService {
@@ -37,6 +37,27 @@ export class AuthService {
     try {
       const payload = { sub: id, email };
       return { accessToken: await this.jwtService.signAsync(payload) };
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async createResetPasswordToken(userId: number): Promise<void> {
+    try {
+      await this.userService.createResetPasswordToken(userId);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async useResetPasswordToken(
+    token: string,
+    body: ResetPasswordBody,
+  ): Promise<void> {
+    try {
+      await this.userService.useResetPasswordToken(token, body);
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException();

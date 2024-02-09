@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '@nestjs/config';
-import { List, ManagingRecord, Task, User } from './entities';
+import { List, PasswordResetToken, Task, User } from './entities';
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import { List, ManagingRecord, Task, User } from './entities';
         username: configService.get<string>('MYSQL_USER', 'root'),
         password: configService.get<string>('MYSQL_PASSWORD', 'root'),
         database: configService.get<string>('MYSQL_DATABASE', 'root'),
-        entities: [User, Task, List, ManagingRecord],
+        entities: [User, Task, List, PasswordResetToken],
         synchronize: true,
       }),
       inject: [ConfigService],
